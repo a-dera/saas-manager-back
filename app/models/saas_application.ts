@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, belongsTo, BelongsTo, hasMany, HasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
-import Organization from './organization'
-import Plan from './plan'
-import Integration from './integration'
+import Organization from '#models/organization'
+import Plan from '#models/plan'
+import Integration from '#models/integration'
 
 export default class SaasApplication extends BaseModel {
   @column({ isPrimary: true })

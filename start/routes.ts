@@ -17,53 +17,60 @@ import { middleware } from './kernel'
 // })
 
 // Routes publiques
-router.post('auth/login', '#controllers/auth_controller.login')
-router.post('auth/register', '#controllers/auth_controller.register')
+router.post('api/auth/login', '#controllers/users_controller.login')
+router.post('api/auth/register', '#controllers/auth_controller.register')
 
 // Routes protégées
 router.group(() => {
-  // Auth routes
-  router.post('auth/logout', '#controllers/auth_controller.logout')
-  router.get('auth/me', '#controllers/auth_controller.me')
-  
-  // Users
-  router.group(() => {
-    router.resource('users', '#controllers/users_controller').apiOnly()
-  }).middleware(['role_check:ADMIN,MANAGER'])
-  
   // Organizations
-  router.resource('organizations', '#controllers/organizations_controller').apiOnly()
-  
+  router
+    .group(() => {
+      router.get('/', 'OrganizationsController.index')
+      router.post('/', 'OrganizationsController.store')
+      router.get('/:id', 'OrganizationsController.show')
+      router.put('/:id', 'OrganizationsController.update')
+      router.delete('/:id', 'OrganizationsController.destroy')
+    })
+    .prefix('/api/organizations')
+    .middleware(['auth', 'verifyAdmin'])
+
   // Clients
-  router.resource('clients', '#controllers/clients_controller').apiOnly()
-  
-  // Applications
-  router.resource('applications', '#controllers/applications_controller').apiOnly()
-  
+  router
+    .group(() => {
+      router.get('/', 'ClientsController.index')
+      router.post('/', 'ClientsController.store')
+      router.get('/:id', 'ClientsController.show')
+      router.put('/:id', 'ClientsController.update')
+      router.delete('/:id', 'ClientsController.destroy')
+      router.get('/:id/subscriptions', 'ClientsController.getSubscriptions')
+    })
+    .prefix('/api/clients')
+    .middleware(['auth', 'verifyOrganization'])
+
   // Subscriptions
-  router.resource('subscriptions', '#controllers/subscriptions_controller').apiOnly()
-  router.post(
-    'subscriptions/:id/renew',
-    '#controllers/subscriptions_controller.renew'
-  )
-  router.post(
-    'subscriptions/:id/cancel',
-    '#controllers/subscriptions_controller.cancel'
-  )
-  
-  // Transactions
-  router.resource('transactions', '#controllers/transactions_controller').apiOnly()
-  
-  // Usage
-  router.resource('usage', '#controllers/usage_controller').apiOnly()
-  
-  // Analytics
-  router.get(
-    'analytics/revenue',
-    '#controllers/analytics_controller.revenueMetrics'
-  )
-  router.get(
-    'analytics/clients',
-    '#controllers/analytics_controller.clientMetrics'
-  )
-}).middleware(['auth'])
+  router
+    .group(() => {
+      router.get('/', 'SubscriptionsController.index')
+      router.post('/', 'SubscriptionsController.store')
+      router.get('/:id', 'SubscriptionsController.show')
+      router.put('/:id', 'SubscriptionsController.update')
+      router.delete('/:id', 'SubscriptionsController.destroy')
+      router.post('/:id/renew', 'SubscriptionsController.renew')
+      router.post('/:id/cancel', 'SubscriptionsController.cancel')
+    })
+    .prefix('/api/subscriptions')
+    .middleware(['auth', 'verifyOrganization'])
+
+  // SaaS Applications
+  router
+    .group(() => {
+      router.get('/', 'SaasApplicationsController.index')
+      router.post('/', 'SaasApplicationsController.store')
+      router.get('/:id', 'SaasApplicationsController.show')
+      router.put('/:id', 'SaasApplicationsController.update')
+      router.delete('/:id', 'SaasApplicationsController.destroy')
+      router.get('/:id/metrics', 'SaasApplicationsController.getMetrics')
+    })
+    .prefix('/api/applications')
+    .middleware(['auth', 'verifyAdmin'])
+}).middleware(['api'])

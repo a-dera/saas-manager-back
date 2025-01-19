@@ -2,12 +2,12 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, beforeCreate, column, hasMany, HasMany, belongsTo, BelongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, hasMany, belongsTo } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { v4 as uuid } from 'uuid'
-import Organization from './organization'
-import Notification from './notification'
+import Organization from '#models/organization'
+import Notification from '#models/notification'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],

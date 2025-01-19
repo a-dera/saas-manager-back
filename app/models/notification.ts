@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, belongsTo, BelongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, belongsTo } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
-import User from './user'
+import User from '#models/user'
 
 export default class Notification extends BaseModel {
   @column({ isPrimary: true })

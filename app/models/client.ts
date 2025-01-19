@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, belongsTo, BelongsTo, hasMany, HasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
-import Organization from './organization.js'
-import Subscription from './subscription'
+import Organization from '#models/organization'
+import Subscription from '#models/subscription'
 
 export default class Client extends BaseModel {
   @column({ isPrimary: true })
